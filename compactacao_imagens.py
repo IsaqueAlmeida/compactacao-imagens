@@ -74,3 +74,13 @@ class QuadTree:
             img[meio_h:, :meio_w],  # SO - Canto inferior esquerdo
             img[meio_h:, meio_w:]   # SE - Canto inferior direito
         ]
+
+    def imagens_diferentes(imagens):
+        # verifica se os quadrantes são diferentes o suficente para dividir
+        cores = [obter_img_com_cores_mesclados(img) for img in imagens]  # obtém cores médias
+
+        # Calcula a diferença máxima entre os quadrantes
+        diferenca_max = np.max(np.abs(np.diff(cores, axis=0)))
+
+        # Se a diferença for grande, continua dividindo
+        return diferenca_max > 30  # 30 já é um limiar ajustável
