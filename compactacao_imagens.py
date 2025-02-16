@@ -21,7 +21,9 @@ class QuadTree:
         imagem_dividida = dividir_em_4(img)
 
         # fazendo a divisão em 4 quadrantes
-        if self._altura < self.max_altura and imagens_diferentes(imagem_dividida):
+        if self._altura < self.max_altura and imagens_diferentes(
+            imagem_dividida
+        ):
             """ se as imagens tiverem cores diferentes, é criado um filho para
             compor os atributos NO, NE, SE, SO"""
             self.folha = False
