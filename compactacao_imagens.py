@@ -3,12 +3,13 @@ import numpy as np
 
 class QuadTree:
     # instanciando os atributos NO, NE, SE, SO, _altura com os valores padrão
-    def __init__(self, altura=0):
+    def __init__(self, altura=0, max_altura=5):
         self.NO = None
         self.NE = None
         self.SE = None
         self.SO = None
         self._altura = altura
+        self.max_altura = max_altura
         self.imagem_com_cores_mesclados = None
         self.folha = True
 
@@ -20,16 +21,16 @@ class QuadTree:
         imagem_dividida = dividir_em_4(img)
 
         # fazendo a divisão em 4 quadrantes
-        if imagens_diferentes(imagem_dividida):
+        if self._altura < self.max_altura and imagens_diferentes(imagem_dividida):
             """ se as imagens tiverem cores diferentes, é criado um filho para
             compor os atributos NO, NE, SE, SO"""
             self.folha = False
             h = self._altura + 1
 
-            self.NO = QuadTree(h)
-            self.NE = QuadTree(h)
-            self.SE = QuadTree(h)
-            self.SO = QuadTree(h)
+            self.NO = QuadTree(h, self.max_altura)
+            self.NE = QuadTree(h, self.max_altura)
+            self.SE = QuadTree(h, self.max_altura)
+            self.SO = QuadTree(h, self.max_altura)
 
             self.NO.inserir_vertices(imagem_dividida[0])
             self.NE.inserir_vertices(imagem_dividida[1])
@@ -85,7 +86,9 @@ def imagens_diferentes(imagens):
     cores = [obter_img_com_cores_mesclados(img) for img in imagens]
 
     # Calcula a diferença máxima entre os quadrantes
-    diferenca_max = np.max(np.abs(np.diff(cores, axis=0)))
+    diferenca_max = np.max([np.linalg.norm(cores[i] - cores[j])
+                            for i in range(len(cores))
+                            for j in range(i+1, len(cores))])
 
     # Se a diferença for grande, continua dividindo
     return diferenca_max > 30  # 30 já é um limiar ajustável
