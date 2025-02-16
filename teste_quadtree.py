@@ -3,7 +3,7 @@ from compactacao_imagens import QuadTree
 
 
 # carregando uma imagem
-img = cv2.imread('nauhanne.jpeg')
+img = cv2.imread('sua_imagem.png')
 
 # criando uma árvore QuadTree e inserir a imagem
 quadtree = QuadTree()
