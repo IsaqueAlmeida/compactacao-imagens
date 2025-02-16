@@ -3,7 +3,7 @@ import numpy as np
 
 class QuadTree:
     # instanciando os atributos NO, NE, SE, SO, _altura com os valores padrão
-    def __init__(self, altura=0, max_altura=5):
+    def __init__(self, altura=0, max_altura=15):
         self.NO = None
         self.NE = None
         self.SE = None
@@ -63,9 +63,10 @@ def obter_img_com_cores_mesclados(img):
 
     # Calcula a média dos valores dos pixels: assumindo RGB
     media_cor = np.mean(img, axis=(0, 1))
+    media_cor_uint8 = np.array(media_cor, dtype=np.uint8)
 
     # retornando um array representando a cor média: convertendo para uint8
-    return np.array(media_cor, dtype=np.uint8)
+    return np.full(img.shape, media_cor_uint8, dtype=np.uint8)
 
 
 def dividir_em_4(img):
@@ -85,7 +86,7 @@ def dividir_em_4(img):
 def imagens_diferentes(imagens):
     # verifica se os quadrantes são diferentes o suficente para subdividir
     """obtém cores médias"""
-    cores = [obter_img_com_cores_mesclados(img) for img in imagens]
+    cores = [np.mean(img, axis=(0, 1)) for img in imagens]
 
     # Calcula a diferença máxima entre os quadrantes
     diferenca_max = np.max([np.linalg.norm(cores[i] - cores[j])
@@ -93,7 +94,7 @@ def imagens_diferentes(imagens):
                             for j in range(i+1, len(cores))])
 
     # Se a diferença for grande, continua dividindo
-    return diferenca_max > 30  # 30 já é um limiar ajustável
+    return diferenca_max > 2  # 30 já é um limiar ajustável
 
 
 def concatenar(NO, NE, SO, SE):
